@@ -13,7 +13,7 @@ def index(request):
     'students':Student.objects.all()})
 
 def view_student(request, id):
-    Student = Student.objects.get(pk=id)
+    
     return HttpResponseRedirect(reverse('index'))
 
 def add(request):
@@ -46,3 +46,28 @@ def add(request):
              'form': StudentForm(),
         })
         
+        
+def edit(request, id):
+    if request.method == "POST":
+        student = Student.objects.get(pk=id)
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return render(request, 'students/edit.html',{
+                'form' : form,
+                'success' : True
+            })
+    else:
+            student = Student.objects.get(pk=id)
+            form = StudentForm(instance = student)
+            return render(request, 'students/edit.html',{
+            'form' : form
+            })
+
+def delete(request, id):
+    if request.method == "POST":
+        # line 70 needs to use when i want to pick a data and change that
+        student = Student.objects.get(pk=id)
+        student.delete()
+    return HttpResponseRedirect(reverse('index'))
+                
