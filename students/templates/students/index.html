@@ -1,60 +1,106 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Student Management System</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
-         />
-        <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
-        <body class="d-flex flex-column min-vh-100">
-            <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-                <div class="container-fluid">
-                  <a class="navbar-brand" href="#">
-                    <i class="fa-solid fa-graduation-cap fa-lg"></i>
-                    Student Manage System</a>
-                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <div class="collapse navbar-collapse" id="navbarColor02">
-                    <ul class="navbar-nav me-auto">
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <i class="fa-solid fa-list-ul fa-lg"></i>
-                          All Students</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <i class="fa-solid fa-plus fa-lg"></i>
-                          Add Stuendt</a>
-                      </li>             
-                    </ul>
-                  </div>
-                </div>
-              </nav>
-              {% comment %} FUll width container {% endcomment %}
-              <div class = "container-fluid">
+{% extends "students/base.html" %}
+
+{% block body %}
                 <h3 class="m-4">All Students</h3>
                 <div class='row'>
                   <div class='col-12'>
-                    <div class="card text-white bg-dark mb-3 ms-4 me-4 mb-4">
-                      <div class="card-header">Header</div>
+                    {% if students%}
+                      <div class="card text-white bg-dark mb-3 ms-4 me-4 mb-4">
+                      <div class="card-header">
+                        <i class="fa-solid fa-list-ul fa-lg"></i>
+                        Student Record
+                      </div>
                       <div class="card-body">
-                        <h4 class="card-title">Dark card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <p class="card-text">
+                          <div class= "table-responsive">
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  {% comment %} header part {% endcomment %}
+                                  <th scope="col">Student Number</th>
+                                  <th scope="col">First Name</th>
+                                  <th scope="col">Last Name</th>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Major</th>
+                                  <th scope="col">GPA</th>
+                                  <th scope="col">Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for student in students  %}
+                                <tr>
+                                  {% comment %} data part {% endcomment %}
+                                  <td>{{student.student_number}}</td>
+                                  <td>{{student.first_name}}</td>
+                                  <td>{{student.last_name}}</td>
+                                  <td>{{student.email}}</td>
+                                  <td>{{student.major}}</td>
+                                  <td>{{student.gpa}}</td>
+                                  <td>
+                                    {% comment %} data-bs-toggle="modal": This is a Bootstrap attribute used to toggle the modal window. {% endcomment %}
+                                    {% comment %} data-bs-target means target modal that will be toggled when the button is clicked {% endcomment %}
+                                    <button type="button" class='btn btn-success me-1' href="{% url 'view_student' student.id %}" data-bs-toggle="modal" data-bs-target="#myModal{{student.id}}">
+                                    <i class="fa-solid fa-circle-info fa-lg"></i>
+                                    </button>
+                                    {% comment %} Modal - view Student  only in data-bs-target you use #{% endcomment %}
+                                    <div class="modal" id="myModal{{student.id}}" tabindex"-1" 
+                                    aria-labelledby="myModalLabel1" aria-hidden="true">
+                                    {% comment %} tabindex {% endcomment %}
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title">
+                                              Student: {{student.first_name}} {{student.last_name}}
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true"></span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <ul class="list-unstyled">
+                                              <li>
+                                                Student Number: <strong>{{ student.student_number}}</strong>
+                                              </li>
+                                              <li>
+                                                Student Number: <strong>{{ student.first_name}}</strong>
+                                              </li>
+                                              <li>
+                                                Student Number: <strong>{{ student.last_name}}</strong>
+                                              </li>
+                                              <li>
+                                                Student Number: <strong>{{ student.email}}</strong>
+                                              </li>
+                                              <li>
+                                                Student Number: <strong>{{ student.major}}</strong>
+                                              </li>
+                                              <li>
+                                                Student Number: <strong>{{ student.gpa}}</strong>
+                                              </li>
+                                            </ul>
+
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+
+                          </div>
+                        </p>
                       </div>
                     </div>
+                    {% else %}
+                    <h5 class="alert alert-primary ms-4 me-4">
+                      No Students Record
+                    </h5>
+                    {% endif %}
+
                   </div>
                 </div>
-              </div>
-              <footer class='mt-auto mb-4'>
-                <div class='text-center'>
-                  <span>
-                    Copyright &copy;<script>document.write(new Date().getFullYear())</script> DocodeLee
-                  </span>
-                </div>
-              </footer>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    </body>
-    </head>
-</html>
+{% endblock  %}
