@@ -1,1 +1,1 @@
-web gunicorn studentmanage-django.wsgi:application --log-file -
+web: gunicorn studentmanage-django.wsgi --log-file -
